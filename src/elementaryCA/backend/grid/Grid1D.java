@@ -206,9 +206,7 @@ public class Grid1D {
             // Create a rectangle to represent the cell
             Rectangle rect = new Rectangle(cellSize, cellSize, cell.getColor());
             // Add it to the JavaFX graph
-            gridPane.getChildren().add(rect);
-            // Tell it where to show it on the screen
-            GridPane.setConstraints(rect, colIndex, currentGenIndex);
+            gridPane.add(rect, colIndex,currentGenIndex);
             // Go to the next cell
             colIndex++;
         }
