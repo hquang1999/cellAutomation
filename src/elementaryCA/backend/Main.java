@@ -48,7 +48,7 @@ public class Main extends Application {
             state = firstGenStr.charAt(i);
             firstGen.add(Cell.fromChar(state));
         }
-//  Omegalol
+
         Grid1D grid = new Grid1D(root, "00011110", firstGen, 2);
         Runner.run(grid);
     }
