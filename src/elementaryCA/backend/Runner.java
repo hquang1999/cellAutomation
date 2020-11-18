@@ -17,11 +17,8 @@ public class Runner {
             private long prevUpdate = 0;
             @Override
             public void handle(long now) {
-
-                //if (now - prevUpdate >= TimeUnit.SECONDS.toNanos(1)) {
-                    grid.nextGeneration();
-                    prevUpdate = now;
-                //}
+                grid.nextGeneration();
+                prevUpdate = now;
             }
         };
         timer.start();
