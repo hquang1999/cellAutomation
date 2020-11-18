@@ -27,7 +27,7 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        int middle = (int) (width / 2);
+        int middle = (int) (width / 4);
 
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < middle; i++) {
@@ -49,7 +49,7 @@ public class Main extends Application {
             firstGen.add(Cell.fromChar(state));
         }
 
-        Grid1D grid = new Grid1D(root, "00011110", firstGen, 1);
+        Grid1D grid = new Grid1D(root, "00011110", firstGen, 2);
         Runner.run(grid);
     }
 }
