@@ -16,7 +16,7 @@ import java.util.Scanner;
 public class Main extends Application {
 
     // List for each line of the File
-    private static List<String> file = new ArrayList<>();
+    private static final List<String> file = new ArrayList<>();
 
     private static String behaviour;
     private static String firstGeneration;
@@ -62,33 +62,62 @@ public class Main extends Application {
 
         if ((choice > -1) && (choice < 256)) {
             behaviour = Integer.toBinaryString(choice);
-            adjust(behaviour);
+            adjust();
         }
         else {
             userInputBehavior();
         }
     }
 
+    /**
+     * This function takes the user input for the first generation.
+     * Since we want them to ONLY input 1 or 0, we need to loop through
+     * and check our string. We call the function recursively if the string
+     * doesn't contain a 1 or 0.
+     */
     private static void userInputGeneration() {
         System.out.println("Input Starting String w/ 1 or 0");
+
         Scanner scanner = new Scanner (System.in);
         String choice = scanner.next();
 
-        System.out.println(choice);
+        boolean valid = true;
+
+        // Checking loop.
         for (int i = 0; i < choice.length(); i++) {
-            if ((!choice.contains("1"))
-                    || (!choice.contains("0"))) {
-                // SHIT DOESN'T WORK
+            if (choice.charAt(i) != '1') {
+                if (choice.charAt(i) != '0') {
+                    System.out.println("Invalid choice!");
+                    valid = false;
+                    break;
+                }
             }
         }
-        firstGeneration = choice;
+
+        // Checking if statements.
+        if (valid) {
+            firstGeneration = choice;
+        }
+        else {
+            userInputGeneration();
+        }
     }
 
-    private static void adjust (String initial) {
-        int zeroes = 8 - initial.length();
+    /**
+     * This function takes the behaviour's binary string
+     * and adds additional zeros to the front so the string can
+     * have a length of 8.
+     */
+    private static void adjust () {
+        // Finds how many zeroes we need.
+        int zeroes = 8 - behaviour.length();
+        // New string builder.
         StringBuilder newString = new StringBuilder();
+        // String builder adds zeros.
         newString.append("0".repeat(Math.max(0, zeroes)));
+        // Append the behaviour string.
         newString.append(behaviour);
+        // Get the new behaviour.
         behaviour = newString.toString();
     }
 
