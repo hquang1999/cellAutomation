@@ -9,7 +9,12 @@ import java.util.List;
 
 import static elementaryCA.backend.cell.Cell.ONE;
 import static elementaryCA.backend.cell.Cell.ZERO;
-
+/**
+ * Author: Hieu Quang
+ * Version: 2.0
+ * Date: 18/11/20
+ * This class does the evolution.
+ */
 public class Grid1D {
     // Conditions
     private char s111;
@@ -49,6 +54,10 @@ public class Grid1D {
         setBehaviours();
     }
 
+    /**
+     * This class sets the behaviors from the behavior string to
+     * our assigned conditions.
+      */
     private void setBehaviours () {
         s111 = behavior.charAt(0);
         s110 = behavior.charAt(1);
@@ -61,57 +70,58 @@ public class Grid1D {
     }
 
     /**
-     * This function does the analysis of the conditions set by setBehaviours.
-     * It checks using the indexes we gave and updates the list.
-      * @param right index
+     * This function does the transformation of the
+     * conditions set by setBehaviours.It checks using
+     * the indexes we gave and updates the list.
+     * @param right index
      * @param left index
      * @param middle index
      * @param nextGen nextGen list
      */
-
-    private void cellTransform(int right, int left, int middle, List<Cell> nextGen) {
-        if (currentGen.get(middle) == ONE) {
+    private void cellTransform(int right, int left
+            , int middle, List<Cell> nextGen) {
+        if (currentGen.get(middle) == ONE) { // MIDDLE
             // Condition 111
             if (currentGen.get(right) == ONE // RIGHT
                     && currentGen.get(left) == ONE) { // LEFT
                 nextGen.add(Cell.fromChar(s111));
             }
             // Condition 011
-            else if (currentGen.get(right) == ONE
-                    && currentGen.get(left) == ZERO) {
+            else if (currentGen.get(right) == ONE // RIGHT
+                    && currentGen.get(left) == ZERO) { // LEFT
                 nextGen.add(Cell.fromChar(s011));
             }
             // Condition 110
-            else if (currentGen.get(right) == ZERO
-                    && currentGen.get(left) == ONE) {
+            else if (currentGen.get(right) == ZERO // RIGHT
+                    && currentGen.get(left) == ONE) { // LEFT
                 nextGen.add(Cell.fromChar(s110));
             }
             // Condition 010
-            else if (currentGen.get(right) == ZERO
-                    && currentGen.get(left) == ZERO) {
+            else if (currentGen.get(right) == ZERO // RIGHT
+                    && currentGen.get(left) == ZERO) { // LEFT
                 nextGen.add(Cell.fromChar(s010));
             }
         }
         // Middle Number 0
-        else if (currentGen.get(middle) == ZERO) {
+        else if (currentGen.get(middle) == ZERO) { // MIDDLE
             // Condition 101
-            if (currentGen.get(right) == ONE
-                    && currentGen.get(left) == ONE) {
+            if (currentGen.get(right) == ONE // RIGHT
+                    && currentGen.get(left) == ONE) { // LEFT
                 nextGen.add(Cell.fromChar(s101));
             }
             // Condition 001
-            else if (currentGen.get(right) == ONE
-                    && currentGen.get(left) == ZERO) {
+            else if (currentGen.get(right) == ONE //RIGHT
+                    && currentGen.get(left) == ZERO) { //LEFT
                 nextGen.add(Cell.fromChar(s001));
             }
             // Condition 100
-            else if (currentGen.get(right) == ZERO
-                    && currentGen.get(left) == ONE) {
+            else if (currentGen.get(right) == ZERO // RIGHT
+                    && currentGen.get(left) == ONE) { // LEFT
                 nextGen.add(Cell.fromChar(s100));
             }
             // Condition 000
-            else if (currentGen.get(right) == ZERO
-                    && currentGen.get(left) == ZERO) {
+            else if (currentGen.get(right) == ZERO // RIGHT
+                    && currentGen.get(left) == ZERO) { // LEFT
                 nextGen.add(Cell.fromChar(s000));
             }
         }
@@ -123,11 +133,14 @@ public class Grid1D {
     private void evolve() {
         List<Cell> nextGen = new ArrayList<>();
         for (int i = 0; i < currentGen.size(); i++) {
-            // Special Condition: The beginning has no right so it wraps around to the end.
+            // Special Condition: The beginning has no
+            // right so it wraps around to the end.
             if (i == 0) {
-                cellTransform(i + 1,currentGen.size() - 1, i, nextGen);
+                cellTransform(i + 1,
+                        currentGen.size() - 1, i, nextGen);
             }
-            // Special Condition: The end has no left so it wraps around to the beginning.
+            // Special Condition: The end has no left
+            // so it wraps around to the beginning.
             else if (i == currentGen.size() - 1) {
                 cellTransform(0, i - 1, i, nextGen);
             }
@@ -148,7 +161,8 @@ public class Grid1D {
         // Create new rectangles to show for the current generation
         for (Cell cell : currentGen) {
             // Create a rectangle to represent the cell
-            Rectangle rect = new Rectangle(cellSize, cellSize, cell.getColor());
+            Rectangle rect = new Rectangle(cellSize,
+                    cellSize, cell.getColor());
             // Add it to the JavaFX graph
             gridPane.add(rect, colIndex,currentGenIndex);
             // Go to the next cell
