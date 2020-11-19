@@ -30,26 +30,22 @@ public class Main extends Application {
         int middle = (int) (width / 4);
 
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < middle; i++) {
-            sb.append("0");
-        }
+        sb.append("0".repeat(Math.max(0, middle)));
         sb.append("1");
-        for (int i = 0; i < middle; i++) {
-            sb.append("0");
-        }
+        sb.append("0".repeat(Math.max(0, middle)));
 
         String firstGenStr = sb.toString();
 
         List<Cell> firstGen = new ArrayList<>();
 
-        // TODO: Turn the firstGen string into a list of cells
+        // Turns the firstGen string into a list of cells
         char state;
         for (int i = 0; i < firstGenStr.length(); i++) {
             state = firstGenStr.charAt(i);
             firstGen.add(Cell.fromChar(state));
         }
 
-        Grid1D grid = new Grid1D(root, "00011110", firstGen, 2);
+        Grid1D grid = new Grid1D(root, "01111110", firstGen, 2);
         Runner.run(grid);
     }
 }

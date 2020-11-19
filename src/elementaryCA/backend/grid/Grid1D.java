@@ -45,6 +45,8 @@ public class Grid1D {
         this.currentGenIndex = 0;
         // Show the initial generation to the screen
         show();
+
+        setBehaviours();
     }
 
     private void setBehaviours () {
@@ -59,11 +61,12 @@ public class Grid1D {
     }
 
     /**
-     * TODO: Fill in the logic below
-     * I would suggest starting off by hard coding one of the rules,
-     * such as rule 30, then generalize from there.
-     * This function evolves the current generation to the next generation
-     * using the current rule set given by the behavior string.
+     * This function does the analysis of the conditions set by setBehaviours.
+     * It checks using the indexes we gave and updates the list.
+      * @param right index
+     * @param left index
+     * @param middle index
+     * @param nextGen nextGen list
      */
 
     private void cellTransform(int right, int left, int middle, List<Cell> nextGen) {
@@ -114,21 +117,26 @@ public class Grid1D {
         }
     }
 
+    /**
+     * This function does the loop for the cell evolution.
+     */
     private void evolve() {
-
         List<Cell> nextGen = new ArrayList<>();
         for (int i = 0; i < currentGen.size(); i++) {
+            // Special Condition: The beginning has no right so it wraps around to the end.
             if (i == 0) {
                 cellTransform(i + 1,currentGen.size() - 1, i, nextGen);
             }
+            // Special Condition: The end has no left so it wraps around to the beginning.
             else if (i == currentGen.size() - 1) {
                 cellTransform(0, i - 1, i, nextGen);
             }
+            // Normal condition.
             else {
                 cellTransform(i + 1,i - 1, i, nextGen);
             }
         }
-        // Inserting newGen to currentGen
+        // Inserting newGen to currentGen.
         currentGen = nextGen;
     }
 
@@ -155,7 +163,6 @@ public class Grid1D {
      * It then shows this new generation to the Java FX window.
      */
     public void nextGeneration() {
-        setBehaviours();
         evolve();
         show();
     }
