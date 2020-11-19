@@ -1,5 +1,7 @@
 package elementaryCA.backend;
 
+import java.io.*;
+
 import elementaryCA.backend.cell.Cell;
 import elementaryCA.backend.grid.Grid1D;
 import javafx.application.Application;
@@ -9,14 +11,23 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Main extends Application {
-    public static void main(String[] args) {
-        launch(args);
+    public static void main(String[] args) throws IOException  {
+        File input = new File (args[0]);
+        Scanner scan = new Scanner (input);
+        BufferedReader reader = new BufferedReader(new FileReader(input));
+
+        System.out.println(scan.nextLine());
+
+
+    //    launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
         primaryStage.setTitle("1D Cellular Automata");
 
         GridPane root = new GridPane();
@@ -47,5 +58,9 @@ public class Main extends Application {
 
         Grid1D grid = new Grid1D(root, "01111110", firstGen, 2);
         Runner.run(grid);
+
+        String test = Integer.toBinaryString(30);
+        System.out.println(test);
+        System.out.println(test.length());
     }
 }
