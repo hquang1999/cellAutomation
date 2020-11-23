@@ -76,7 +76,7 @@ public class Main extends Application {
 
          */
         Neighborhood grid = new
-                Neighborhood(root, allGens,50);
+                Neighborhood(root, allGens,3);
 
         Runner.run(grid);
     }
