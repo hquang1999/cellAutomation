@@ -146,8 +146,6 @@ public class Main extends Application {
         }
     }
 
-
-
     /**
      * Function to centralize the firstGeneration.
      * @param distance The distance to the center of the screen.
@@ -189,7 +187,7 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        int middle = (int) (width / 4); // Needs to be 4 b/c cellSize = 2
+        int middle = (int) (width / 8); // Needs to be 4 b/c cellSize = 2
         centralize(middle);
 
         List<Cell> firstGen = new ArrayList<>();
@@ -200,8 +198,9 @@ public class Main extends Application {
             state = firstGeneration.charAt(i);
             firstGen.add(Cell.fromChar(state));
         }
+        System.out.println(firstGen.size());
 
-        Grid1D grid = new Grid1D(root, behavior, firstGen, 2);
+        Grid1D grid = new Grid1D(root, behavior, firstGen, 4);
         Runner.run(grid);
     }
 }

@@ -25,6 +25,16 @@ public enum Cell {
         }
     }
 
+    public int getInt() {
+        int i;
+        if (this == ZERO) {
+            return 0;
+        }
+        else {
+            return 1;
+        }
+    }
+
 
     public static Cell fromChar(char c) throws IllegalArgumentException {
         if (c == '0') {
