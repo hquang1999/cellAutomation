@@ -66,17 +66,8 @@ public class Main extends Application {
             allGens.add(allGensRows);
         }
 
-        /*
-        for (int i = 0; i < column; i++) {
-            for (int z = 0; z < allGens.get(i).size(); z++) {
-                System.out.print(allGens.get(i).get(z).getInt());
-            }
-            System.out.println();
-        }
-
-         */
         Neighborhood grid = new
-                Neighborhood(root, allGens,3);
+                Neighborhood(root, allGens,3, row, column);
 
         Runner.run(grid);
     }

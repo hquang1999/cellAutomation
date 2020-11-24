@@ -15,11 +15,11 @@ public class Runner {
      */
     public static void run(Neighborhood grid) {
         AnimationTimer timer = new AnimationTimer() {
-            private long prevUpdate = 0;
+            //private long prevUpdate = 0;
             @Override
             public void handle(long now) {
                 grid.nextGeneration();
-                prevUpdate = now;
+                //prevUpdate = now;
             }
         };
         timer.start();

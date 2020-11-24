@@ -26,13 +26,14 @@ public enum Cell {
     }
 
     public int getInt() {
-        int i;
+        int i = 0;
         if (this == ZERO) {
-            return 0;
+            i = 0;
         }
-        else {
-            return 1;
+        else if (this == ONE){
+            i = 1;
         }
+        return i;
     }
 
 
