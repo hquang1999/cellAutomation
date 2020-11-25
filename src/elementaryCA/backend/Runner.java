@@ -3,6 +3,8 @@ package elementaryCA.backend;
 import elementaryCA.backend.grid.Grid1D;
 import javafx.animation.AnimationTimer;
 
+import java.util.concurrent.TimeUnit;
+
 public class Runner {
 
     /**
@@ -12,11 +14,14 @@ public class Runner {
      */
     public static void run(Grid1D grid) {
         AnimationTimer timer = new AnimationTimer() {
-            //private long prevUpdate = 0;
+            private long prevUpdate = 0;
             @Override
             public void handle(long now) {
-                grid.nextGeneration();
-                //prevUpdate = now;
+                if (now - prevUpdate >=
+                        TimeUnit.MILLISECONDS.toNanos(500)) {
+                    grid.nextGeneration();
+                    prevUpdate = now;
+                }
             }
         };
         timer.start();

@@ -27,19 +27,123 @@ public class Main extends Application {
     private static int column;
 
     public static void main(String[] args) throws IOException {
+        Scanner scanner = new Scanner (System.in);
 
-        File input = new File(args[0]);
-        Scanner scan = new Scanner(input);
+        System.out.println("John Conway's Game of Life");
+        System.out.println("[r] Read in file");
+        System.out.println("[u] User input");
 
-        while (scan.hasNextLine()) {
-            file.add(scan.nextLine());
+        String choice = scanner.next();
+        choice.toLowerCase();
+
+        switch (choice) {
+            case "r":
+                File input = new File(args[0]);
+                Scanner scan = new Scanner(input);
+
+                while (scan.hasNextLine()) {
+                    file.add(scan.nextLine());
+                }
+                file.remove(0);
+
+                row = file.get(0).length();
+                column = file.size();
+
+                launch(args);
+                break;
+            case "u":
+                userInputRow();
+                contUserInputRow();
+                column = file.size();
+
+                launch(args);
+                break;
+            default:
+                System.out.println("Invalid INPUT!");
+                main(args);
+                break;
         }
-        file.remove(0);
+    }
 
-        row = file.get(0).length();
-        column = file.size();
+    private static boolean checker(String string) {
+        boolean temp = true;
+        // Checking loop.
+        for (int i = 0; i < string.length(); i++) {
+            // If not 1.
+            if (string.charAt(i) != '1') {
+                // If not 0.
+                if (string.charAt(i) != '0') {
+                    // It's an invalid choice.
+                    System.out.println(string + " is not a valid " +
+                            "choice!");
+                    temp = false;
+                    break;
+                }
+            }
+        }
+        return temp;
+    }
 
-        launch(args);
+    private static void userInputRow () {
+        System.out.println("Input Row w/ 1 or 0");
+
+        Scanner scanner = new Scanner (System.in);
+        String choice = scanner.next();
+
+        boolean valid = checker(choice);
+
+        if (valid) {
+            row = choice.length();
+            file.add(choice);
+        }
+        else {
+            userInputRow();
+        }
+    }
+
+    private static void contUserInputRow () {
+        System.out.println("Keep inputting? [y] / [n]");
+
+        Scanner scanner = new Scanner (System.in);
+        String choice = scanner.next();
+
+        switch(choice) {
+            case "y":
+                uInputRow();
+                contUserInputRow();
+                break;
+            case "n":
+                break;
+            default:
+                System.out.println(choice + " is not a valid " +
+                        "choice!");
+                contUserInputRow();
+                break;
+        }
+    }
+
+    private static void uInputRow() {
+        System.out.println("Input Row w/ 1 or 0. Length must" +
+                " be " + row);
+
+        Scanner scanner = new Scanner (System.in);
+        String choice = scanner.next();
+        if (choice.length() == row) {
+            boolean valid = checker(choice);
+
+            if (valid) {
+                row = choice.length();
+                file.add(choice);
+            }
+            else {
+                uInputRow();
+            }
+        }
+        else {
+            System.out.println("Invalid ROW length!");
+            uInputRow();
+        }
+
     }
 
     public void start(Stage primaryStage) throws Exception {
@@ -47,8 +151,8 @@ public class Main extends Application {
         primaryStage.setTitle("Game of Life");
 
         GridPane root = new GridPane();
-        double width = 1201;
-        double height = 1000;
+        double width = row * 20;
+        double height = column * 20;
         Scene scene = new Scene(root, width, height);
 
         primaryStage.setScene(scene);
@@ -67,7 +171,7 @@ public class Main extends Application {
         }
 
         Neighborhood grid = new
-                Neighborhood(root, allGens,3, row, column);
+                Neighborhood(root, allGens,20, row);
 
         Runner.run(grid);
     }
