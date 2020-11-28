@@ -53,7 +53,7 @@ public class Main extends Application {
                 break;
             case "u":
                 userInputRow();
-                contUserInputRow();
+                recurUserInputRow();
                 column = file.size();
 
                 launch(args);
@@ -65,7 +65,7 @@ public class Main extends Application {
         }
     }
 
-    private static boolean checker(String string) {
+    private static boolean checkNum(String string) {
         boolean temp = true;
         // Checking loop.
         for (int i = 0; i < string.length(); i++) {
@@ -90,7 +90,7 @@ public class Main extends Application {
         Scanner scanner = new Scanner (System.in);
         String choice = scanner.next();
 
-        boolean valid = checker(choice);
+        boolean valid = checkNum(choice);
 
         if (valid) {
             row = choice.length();
@@ -101,7 +101,7 @@ public class Main extends Application {
         }
     }
 
-    private static void contUserInputRow () {
+    private static void recurUserInputRow () {
         System.out.println("Keep inputting? [y] / [n]");
 
         Scanner scanner = new Scanner (System.in);
@@ -109,41 +109,40 @@ public class Main extends Application {
 
         switch(choice) {
             case "y":
-                uInputRow();
-                contUserInputRow();
+                checkRowLength();
+                recurUserInputRow();
                 break;
             case "n":
                 break;
             default:
                 System.out.println(choice + " is not a valid " +
                         "choice!");
-                contUserInputRow();
+                recurUserInputRow();
                 break;
         }
     }
 
-    private static void uInputRow() {
+    private static void checkRowLength() {
         System.out.println("Input Row w/ 1 or 0. Length must" +
                 " be " + row);
 
         Scanner scanner = new Scanner (System.in);
         String choice = scanner.next();
         if (choice.length() == row) {
-            boolean valid = checker(choice);
+            boolean valid = checkNum(choice);
 
             if (valid) {
                 row = choice.length();
                 file.add(choice);
             }
             else {
-                uInputRow();
+                checkRowLength();
             }
         }
         else {
             System.out.println("Invalid ROW length!");
-            uInputRow();
+            checkRowLength();
         }
-
     }
 
     public void start(Stage primaryStage) throws Exception {

@@ -1,14 +1,14 @@
-package gameOfLife.backend.neighborhood;
+package langtonsLoop.backend.neighborhood;
 
-import gameOfLife.backend.cell.Cell;
+import langtonsLoop.backend.cell.Cell;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static gameOfLife.backend.cell.Cell.ONE;
-import static gameOfLife.backend.cell.Cell.ZERO;
+import static langtonsLoop.backend.cell.Cell.ONE;
+import static langtonsLoop.backend.cell.Cell.ZERO;
 
 public class Neighborhood {
 
@@ -18,14 +18,19 @@ public class Neighborhood {
 
     private List<List<Cell>> oldGens;
 
+    private List<List<Cell>> rules;
+
     private int row;
 
     public Neighborhood(GridPane gridPane
-             , List<List<Cell>> allGens, double cellSize
+             , List<List<Cell>> allGens
+             , List<List<Cell>> rules
+             , double cellSize
              , int rows) {
         this.gridPane = gridPane;
         this.cellSize = cellSize;
         this.oldGens = allGens;
+        this.rules = rules;
         this.row = rows;
     }
 
