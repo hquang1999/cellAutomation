@@ -20,7 +20,7 @@ public class Runner {
             public void handle(long now) {
 
                 if (now - prevUpdate >=
-                        TimeUnit.MILLISECONDS.toNanos(200)) {
+                        TimeUnit.MILLISECONDS.toNanos(100)) {
                     grid.nextGeneration();
                     prevUpdate = now;
                 }

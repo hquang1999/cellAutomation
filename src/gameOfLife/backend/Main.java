@@ -26,6 +26,8 @@ public class Main extends Application {
     private static int row;
     private static int column;
 
+    private static int userRowMax;
+
     public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner (System.in);
 
@@ -52,6 +54,7 @@ public class Main extends Application {
                 launch(args);
                 break;
             case "u":
+                askMaxRows();
                 userInputRow();
                 recurUserInputRow();
                 column = file.size();
@@ -62,6 +65,19 @@ public class Main extends Application {
                 System.out.println("Invalid INPUT!");
                 main(args);
                 break;
+        }
+    }
+
+    private static void askMaxRows() {
+        System.out.println("How Many Rows Do You Want to Input? [1 - 10000]");
+        Scanner scanner = new Scanner (System.in);
+        int choice = scanner.nextInt();
+        if ((choice > 0) && (choice < 10001)) {
+            userRowMax = choice;
+        }
+        else {
+            System.out.println("Invalid Choice!");
+            askMaxRows();
         }
     }
 
@@ -85,9 +101,10 @@ public class Main extends Application {
     }
 
     private static void userInputRow () {
+        System.out.println(userRowMax + " rows remaining.");
         System.out.println("Input Row w/ 1 or 0");
 
-        Scanner scanner = new Scanner (System.in);
+        Scanner scanner = new Scanner(System.in);
         String choice = scanner.next();
 
         boolean valid = checkNum(choice);
@@ -95,30 +112,24 @@ public class Main extends Application {
         if (valid) {
             row = choice.length();
             file.add(choice);
-        }
-        else {
+            userRowMax--;
+        } else {
             userInputRow();
         }
     }
 
     private static void recurUserInputRow () {
-        System.out.println("Keep inputting? [y] / [n]");
-
-        Scanner scanner = new Scanner (System.in);
-        String choice = scanner.next();
-
-        switch(choice) {
-            case "y":
-                checkRowLength();
-                recurUserInputRow();
-                break;
-            case "n":
-                break;
-            default:
-                System.out.println(choice + " is not a valid " +
-                        "choice!");
-                recurUserInputRow();
-                break;
+        if (userRowMax > 0) {
+            System.out.println();
+            if (userRowMax == 1) {
+                System.out.println(userRowMax + " row remaining.");
+            }
+            else {
+                System.out.println(userRowMax + " rows remaining.");
+            }
+            checkRowLength();
+            userRowMax--;
+            recurUserInputRow();
         }
     }
 

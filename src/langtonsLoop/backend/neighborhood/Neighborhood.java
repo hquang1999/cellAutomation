@@ -5,6 +5,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import static langtonsLoop.backend.cell.Cell.ONE;
@@ -18,55 +20,56 @@ public class Neighborhood {
 
     private List<List<Cell>> oldGens;
 
-    private List<List<Cell>> rules;
+    private final List<List<Cell>> rules;
+
+    private final List<Cell> zeroes;
 
     private int row;
 
     public Neighborhood(GridPane gridPane
              , List<List<Cell>> allGens
              , List<List<Cell>> rules
+             , List<Cell> zeroes
              , double cellSize
              , int rows) {
         this.gridPane = gridPane;
         this.cellSize = cellSize;
         this.oldGens = allGens;
         this.rules = rules;
+        this.zeroes = zeroes;
         this.row = rows;
+
     }
 
-    /**
-     * This function determines whether the cell lives or dies.
-     * @param neighbors Amount of neighbors.
-     * @param temp List we add to.
-     * @param cell Current cell in the position.
-     */
-    private void addNeighbors(int neighbors
-            , List<Cell> temp, Cell cell) {
-        /*
-            If neighbors are less than 2 or more than 3, cell dies.
-         */
-        if ((neighbors < 2) || (neighbors > 3)){
-            temp.add(Cell.fromChar('0'));
-        }
+    private void cellChecking (Cell mid,List<Cell> NESW,
+            List<Cell> ESWN, List<Cell> SWNE, List<Cell> WNES,
+                               List<Cell> finalRow) {
 
-        /*
-            If the cell is alive, and the neighbors are 2 or 3,
-            cell lives.
-         */
-        if ((cell == ONE) && ((neighbors == 2) || neighbors == 3)){
-            temp.add(Cell.fromChar('1'));
-        }
-        /*
-            If the cell is dead but it has 3 neighbors, it
-            becomes alive.
-         */
-        if ((cell == ZERO) && (neighbors == 3)) {
-            temp.add(Cell.fromChar('1'));
-        }
-        // Otherwise, if there are only 2, it dies.
-        else if ((cell == ZERO) &&
-                (neighbors == 2)) {
-            temp.add(Cell.fromChar('0'));
+        for (int i = 0; i < rules.size(); i++) {
+            if (rules.get(i).get(0) == mid) {
+                List<Cell> tempRules = new ArrayList<>();
+                tempRules.add(rules.get(i).get(1));
+                tempRules.add(rules.get(i).get(2));
+                tempRules.add(rules.get(i).get(3));
+                tempRules.add(rules.get(i).get(4));
+
+                if (NESW.equals(tempRules)) {
+                    finalRow.add(rules.get(i).get(5));
+                    break;
+                }
+                else if (ESWN.equals(tempRules)) {
+                    finalRow.add(rules.get(i).get(5));
+                    break;
+                }
+                else if (SWNE.equals(tempRules)) {
+                    finalRow.add(rules.get(i).get(5));
+                    break;
+                }
+                else if (WNES.equals(tempRules)) {
+                    finalRow.add(rules.get(i).get(5));
+                    break;
+                }
+            }
         }
     }
 
@@ -82,150 +85,101 @@ public class Neighborhood {
      */
     private void rowEvolve (List<Cell> top
             , List<Cell> bottom, List <Cell> middle
-            , List<List<Cell>> newGen, int columnIndex) {
-        // Our total neighbors.
-        int neighbors;
+            , List<List<Cell>> newGen) {
         // Temp list that we update.
-        List<Cell> temp = new ArrayList<>();
-        // Looping through one line, going right
+        //System.out.println();
+       // System.out.print("i = ");
+        List<Cell> finalRow = new ArrayList<>();
         for(int i = 0; i < middle.size(); i++) {
+           // System.out.print(i + ", ");
             // This is for normal checking.
             if ((i != 0) && (i != middle.size() - 1)) {
-                // Neighbors must be zero when we start.
-                neighbors = 0;
+                List<Cell> NESW = new ArrayList<>();
+                NESW.add(top.get(i));
+                NESW.add(middle.get(i + 1));
+                NESW.add(bottom.get(i));
+                NESW.add(middle.get(i - 1));
 
-                if (top.get(i - 1) == ONE) {
-                    neighbors++;
-                }
-                if (top.get(i) == ONE) {
-                    neighbors++;
-                }
-                if (top.get(i + 1) == ONE) {
-                    neighbors++;
-                }
+                List<Cell> ESWN = new ArrayList<>();
+                ESWN.add(middle.get(i + 1));
+                ESWN.add(bottom.get(i));
+                ESWN.add(middle.get(i - 1));
+                ESWN.add(top.get(i));
 
-                if (bottom.get(i - 1) == ONE) {
-                    neighbors++;
-                }
-                if (bottom.get(i) == ONE) {
-                    neighbors++;
-                }
-                if (bottom.get(i + 1) == ONE) {
-                    neighbors++;
-                }
+                List<Cell> SWNE = new ArrayList<>();
+                SWNE.add(bottom.get(i));
+                SWNE.add(middle.get(i - 1));
+                SWNE.add(top.get(i));
+                SWNE.add(middle.get(i + 1));
 
-                // Checking the left cell.
-                if (middle.get(i - 1) == ONE) {
-                    neighbors++;
-                }
-                // Checking the right cell.
-                if (middle.get(i + 1) == ONE) {
-                    neighbors++;
-                }
+                List<Cell> WNES = new ArrayList<>();
+                WNES.add(middle.get(i - 1));
+                WNES.add(top.get(i));
+                WNES.add(middle.get(i + 1));
+                WNES.add(bottom.get(i));
 
-                // Calls functions to check if the cell lives or dies.
-                addNeighbors(neighbors,temp,middle.get(i));
-
-                // Create a rectangle to represent the cell
-                Rectangle rect = new Rectangle(cellSize,
-                        cellSize, temp.get(i).getColor());
-                gridPane.getChildren().remove(temp.get(i));
-                // Add it to the JavaFX graph
-                gridPane.add(rect, columnIndex, i);
+                cellChecking(middle.get(i),NESW,ESWN,SWNE,WNES,finalRow);
             }
+
             // Checking the very left index of the row.
             else if (i == 0) {
-                // Neighbors must be zero when we start.
-                neighbors = 0;
+                List<Cell> NESW = new ArrayList<>();
+                NESW.add(top.get(i));
+                NESW.add(middle.get(i + 1));
+                NESW.add(bottom.get(i));
+                NESW.add(middle.get(middle.size() - 1));
 
-                // SPECIAL CONDITION, we check the very right cell.
-                if (top.get(middle.size() - 1) == ONE) {
-                    neighbors++;
-                }
-                if (top.get(i) == ONE) {
-                    neighbors++;
-                }
-                if (top.get(i + 1) == ONE) {
-                    neighbors++;
-                }
+                List<Cell> ESWN = new ArrayList<>();
+                ESWN.add(middle.get(i + 1));
+                ESWN.add(bottom.get(i));
+                ESWN.add(middle.get(middle.size() - 1));
+                ESWN.add(top.get(i));
 
-                // SPECIAL CONDITION, we check the very right cell.
-                if (bottom.get(middle.size() - 1) == ONE) {
-                    neighbors++;
-                }
-                if (bottom.get(i) == ONE) {
-                    neighbors++;
-                }
-                if (bottom.get(i + 1) == ONE) {
-                    neighbors++;
-                }
+                List<Cell> SWNE = new ArrayList<>();
+                SWNE.add(bottom.get(i));
+                SWNE.add(middle.get(middle.size() - 1));
+                SWNE.add(top.get(i));
+                SWNE.add(middle.get(i + 1));
 
-                // Checking the right cell.
-                if (middle.get(i + 1) == ONE) {
-                    neighbors++;
-                }
-                // Can't check left, check right most.
-                if (middle.get(middle.size() - 1) == ONE) {
-                    neighbors++;
-                }
+                List<Cell> WNES = new ArrayList<>();
+                WNES.add(middle.get(middle.size() - 1));
+                WNES.add(top.get(i));
+                WNES.add(middle.get(i + 1));
+                WNES.add(bottom.get(i));
 
-                // Calls functions to check if the cell lives or dies.
-                addNeighbors(neighbors,temp,middle.get(i));
-
-                // Create a rectangle to represent the cell
-                Rectangle rect = new Rectangle(cellSize,
-                        cellSize, temp.get(i).getColor());
-                gridPane.getChildren().remove(temp.get(i));
-                // Add it to the JavaFX graph
-                gridPane.add(rect, columnIndex, i);
+                cellChecking(middle.get(i),NESW,ESWN,SWNE,WNES,finalRow);
             }
             // Checking the very right index of the row.
             else if (i == middle.size() - 1) {
-                // Neighbors must be zero when we start.
-                neighbors = 0;
+                List<Cell> NESW = new ArrayList<>();
+                NESW.add(top.get(i));
+                NESW.add(middle.get(0));
+                NESW.add(bottom.get(i));
+                NESW.add(middle.get(i - 1));
 
-                if (top.get(i - 1) == ONE) {
-                    neighbors++;
-                }
-                if (top.get(i) == ONE) {
-                    neighbors++;
-                }
-                // Instead, we check the very left cell.
-                if (top.get(0) == ONE) {
-                    neighbors++;
-                }
+                List<Cell> ESWN = new ArrayList<>();
+                ESWN.add(middle.get(0));
+                ESWN.add(bottom.get(i));
+                ESWN.add(middle.get(i - 1));
+                ESWN.add(top.get(i));
 
-                if (bottom.get(i - 1) == ONE) {
-                    neighbors++;
-                }
-                if (bottom.get(i) == ONE) {
-                    neighbors++;
-                }
-                if (bottom.get(0) == ONE) {
-                    neighbors++;
-                }
+                List<Cell> SWNE = new ArrayList<>();
+                SWNE.add(bottom.get(i));
+                SWNE.add(middle.get(i - 1));
+                SWNE.add(top.get(i));
+                SWNE.add(middle.get(0));
 
-                // Checking the left cell.
-                if (middle.get(i - 1) == ONE) {
-                    neighbors++;
-                }
-                // Can't check right, check left most.
-                if (middle.get(0) == ONE) {
-                    neighbors++;
-                }
+                List<Cell> WNES = new ArrayList<>();
+                WNES.add(middle.get(i - 1));
+                WNES.add(top.get(i));
+                WNES.add(middle.get(0));
+                WNES.add(bottom.get(i));
 
-                // Calls functions to check if the cell lives or dies.
-                addNeighbors(neighbors,temp,middle.get(i));
+                cellChecking(middle.get(i),NESW,ESWN,SWNE,WNES,finalRow);
 
-                // Create a rectangle to represent the cell
-                Rectangle rect = new Rectangle(cellSize,
-                        cellSize, temp.get(i).getColor());
-                gridPane.getChildren().remove(temp.get(i));
-                // Add it to the JavaFX graph
-                gridPane.add(rect, columnIndex, i);
             }
         }
-        newGen.add(temp);
+        newGen.add(finalRow);
     }
 
     /**
@@ -234,40 +188,31 @@ public class Neighborhood {
      */
     private void evolve() {
         List<List<Cell>> newGen = new ArrayList<>();
-        for (int r = 0; r < row; r++) {
+
+        for (int r = 0; r < oldGens.size(); r++) {
             // Using the top and bottom rows normally.
-            if ((r != 0) && (r != oldGens.get(0).size() - 1)) {
+            if ((r > 0) && (r < oldGens.size() - 1)) {
                 rowEvolve(oldGens.get(r - 1),
                         oldGens.get(r + 1), oldGens.get(r),
-                        newGen, r);
+                        newGen);
             }
-            /*
-                If row is at the top, we have to use the very bottom
-                row as our top (last index) with a normal row
-                for the bottom.
-             */
+
             else if(r == 0) {
                 rowEvolve(oldGens.get(oldGens.size() - 1),
                         oldGens.get(r + 1), oldGens.get(r),
-                        newGen, r);
+                        newGen);
             }
-            /*
-                If row is at the bottom, we have to use the very
-                top row as our bottom (index 0) with a
-                a normal row for the top.
-             */
-            else if(r == oldGens.get(0).size() - 1) {
+            else if(r == oldGens.size() - 1) {
                 rowEvolve(oldGens.get(r - 1),
                         oldGens.get(0), oldGens.get(r),
-                        newGen , r);
+                        newGen);
             }
         }
-
         // Replace the older list with the new one.
+        //printList(oldGens);
         oldGens = newGen;
     }
 
-/*
     private void printList(List<List<Cell>> list) {
         System.out.println();
         for (int z = 0; z < list.size(); z++) {
@@ -276,34 +221,30 @@ public class Neighborhood {
             }
             System.out.println();
         }
-
     }
 
- */
-
-    public void nextGeneration() {
-        evolve();
-    }
-}
-/*
-    private void show() {
-        int colIndex = 0;
+    public void show() {
+        gridPane.getChildren().clear();
         int rowIndex = 0;
-        // Create new rectangles to show for the current generation
+        int columnIndex = 0;
         for (List<Cell> curRow : oldGens) {
-            for (Cell cell : curRow) {
+            for(Cell cell : curRow) {
                 // Create a rectangle to represent the cell
                 Rectangle rect = new Rectangle(cellSize,
                         cellSize, cell.getColor());
                 gridPane.getChildren().remove(cell);
                 // Add it to the JavaFX graph
-                gridPane.add(rect, colIndex, rowIndex);
+                gridPane.add(rect, columnIndex, rowIndex);
                 // Go to the next cell
-                colIndex++;
+                columnIndex++;
             }
-            colIndex = 0;
+            columnIndex = 0;
             rowIndex++;
         }
     }
 
- */
+    public void nextGeneration() {
+        show();
+        evolve();
+    }
+}

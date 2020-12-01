@@ -117,16 +117,7 @@ public class Neighborhood {
                 if (middle.get(i + 1) == ONE) {
                     neighbors++;
                 }
-
-                // Calls functions to check if the cell lives or dies.
                 addNeighbors(neighbors,temp,middle.get(i));
-
-                // Create a rectangle to represent the cell
-                Rectangle rect = new Rectangle(cellSize,
-                        cellSize, temp.get(i).getColor());
-                gridPane.getChildren().remove(temp.get(i));
-                // Add it to the JavaFX graph
-                gridPane.add(rect, columnIndex, i);
             }
             // Checking the very left index of the row.
             else if (i == 0) {
@@ -164,15 +155,7 @@ public class Neighborhood {
                     neighbors++;
                 }
 
-                // Calls functions to check if the cell lives or dies.
                 addNeighbors(neighbors,temp,middle.get(i));
-
-                // Create a rectangle to represent the cell
-                Rectangle rect = new Rectangle(cellSize,
-                        cellSize, temp.get(i).getColor());
-                gridPane.getChildren().remove(temp.get(i));
-                // Add it to the JavaFX graph
-                gridPane.add(rect, columnIndex, i);
             }
             // Checking the very right index of the row.
             else if (i == middle.size() - 1) {
@@ -208,16 +191,8 @@ public class Neighborhood {
                 if (middle.get(0) == ONE) {
                     neighbors++;
                 }
-
                 // Calls functions to check if the cell lives or dies.
                 addNeighbors(neighbors,temp,middle.get(i));
-
-                // Create a rectangle to represent the cell
-                Rectangle rect = new Rectangle(cellSize,
-                        cellSize, temp.get(i).getColor());
-                gridPane.getChildren().remove(temp.get(i));
-                // Add it to the JavaFX graph
-                gridPane.add(rect, columnIndex, i);
             }
         }
         newGen.add(temp);
@@ -231,7 +206,7 @@ public class Neighborhood {
         List<List<Cell>> newGen = new ArrayList<>();
         for (int r = 0; r < row; r++) {
             // Using the top and bottom rows normally.
-            if ((r != 0) && (r != oldGens.get(0).size() - 1)) {
+            if ((r != 0) && (r != oldGens.size() - 1)) {
                 rowEvolve(oldGens.get(r - 1),
                         oldGens.get(r + 1), oldGens.get(r),
                         newGen, r);
@@ -251,7 +226,7 @@ public class Neighborhood {
                 top row as our bottom (index 0) with a
                 a normal row for the top.
              */
-            else if(r == oldGens.get(0).size() - 1) {
+            else if(r == oldGens.size() - 1) {
                 rowEvolve(oldGens.get(r - 1),
                         oldGens.get(0), oldGens.get(r),
                         newGen , r);
@@ -262,26 +237,8 @@ public class Neighborhood {
         oldGens = newGen;
     }
 
-/*
-    private void printList(List<List<Cell>> list) {
-        System.out.println();
-        for (int z = 0; z < list.size(); z++) {
-            for (int i = 0; i < list.get(z).size(); i++) {
-                System.out.print(list.get(z).get(i).getInt());
-            }
-            System.out.println();
-        }
-
-    }
-
- */
-
-    public void nextGeneration() {
-        evolve();
-    }
-}
-/*
     private void show() {
+        gridPane.getChildren().clear();
         int colIndex = 0;
         int rowIndex = 0;
         // Create new rectangles to show for the current generation
@@ -301,4 +258,8 @@ public class Neighborhood {
         }
     }
 
- */
+    public void nextGeneration() {
+        show();
+        evolve();
+    }
+}

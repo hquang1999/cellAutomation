@@ -20,7 +20,7 @@ public class Main {
                 gameOfLife.backend.Main.main(args);
             }
             else if (input.equalsIgnoreCase("ll")) {
-                System.out.println("Hello World");
+                langtonsLoop.backend.Main.main(args);
             }
             else {
                 System.out.println(input + " is not a recognized command. Try" +

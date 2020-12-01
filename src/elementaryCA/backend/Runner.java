@@ -16,7 +16,7 @@ public class Runner {
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                    grid.nextGeneration();
+                grid.nextGeneration();
             }
         };
         timer.start();

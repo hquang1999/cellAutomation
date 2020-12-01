@@ -1,7 +1,6 @@
 package langtonsLoop.backend;
 
-//import gameOfLife.backend.grid.Grid1D;
-import gameOfLife.backend.neighborhood.Neighborhood;
+import langtonsLoop.backend.neighborhood.Neighborhood;
 import javafx.animation.AnimationTimer;
 
 import java.util.concurrent.TimeUnit;
@@ -15,15 +14,17 @@ public class Runner {
      */
     public static void run(Neighborhood grid) {
         AnimationTimer timer = new AnimationTimer() {
-            private long prevUpdate = 0;
+           // private long prevUpdate = 0;
             @Override
             public void handle(long now) {
-
+/*
                 if (now - prevUpdate >=
                         TimeUnit.MILLISECONDS.toNanos(200)) {
+
+ */
                     grid.nextGeneration();
-                    prevUpdate = now;
-                }
+                    //prevUpdate = now;
+               // }
             }
         };
         timer.start();

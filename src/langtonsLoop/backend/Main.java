@@ -43,6 +43,7 @@ public class Main extends Application {
         row = initConfig.get(0).length();
         column = initConfig.size();
 
+
         File input2 = new File(args[1]);
         Scanner scan2 = new Scanner(input2);
 
@@ -50,9 +51,7 @@ public class Main extends Application {
             rules.add(scan2.nextLine());
         }
 
-        System.out.println(initConfig);
-        System.out.println(rules);
-        //launch(args);
+        launch(args);
 
     }
 
@@ -67,6 +66,8 @@ public class Main extends Application {
 
         primaryStage.setScene(scene);
         primaryStage.show();
+
+
 
         List<List<Cell>> allGens = new ArrayList<>();
 
@@ -89,10 +90,16 @@ public class Main extends Application {
             }
             listRules.add(lRulesRows);
         }
+
+        List<Cell> zeroes = new ArrayList<>();
+        for (int i = 0; i < allGens.get(0).size(); i++) {
+            zeroes.add(Cell.ZERO);
+        }
+
         Neighborhood grid = new
                 Neighborhood(root, allGens
-                , listRules,10, row);
+                , listRules, zeroes,10, column);
 
-        //Runner.run(grid);
+        Runner.run(grid);
     }
 }
