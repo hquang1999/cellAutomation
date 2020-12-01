@@ -5,55 +5,78 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-
-import static langtonsLoop.backend.cell.Cell.ONE;
-import static langtonsLoop.backend.cell.Cell.ZERO;
-
+/**
+ * Author: Hieu Quang
+ * Version: 2.0
+ * Date: 1/12/20
+ * This class does all the cell updating and looping.
+ */
 public class Neighborhood {
 
+    // Grid pane
     private final GridPane gridPane;
 
+    // Cell size
     private final double cellSize;
 
+    // Current generation that we need to update.
     private List<List<Cell>> oldGens;
 
+    // List of our rules.
     private final List<List<Cell>> rules;
 
-    private final List<Cell> zeroes;
-
-    private int row;
-
+    /***
+     * Default Constructor
+     * @param gridPane Pane
+     * @param allGens Our current generation that we need to update.
+     * @param rules Rule list.
+     * @param cellSize Cell size.
+     */
     public Neighborhood(GridPane gridPane
              , List<List<Cell>> allGens
              , List<List<Cell>> rules
-             , List<Cell> zeroes
-             , double cellSize
-             , int rows) {
+             , double cellSize) {
         this.gridPane = gridPane;
         this.cellSize = cellSize;
         this.oldGens = allGens;
         this.rules = rules;
-        this.zeroes = zeroes;
-        this.row = rows;
-
     }
 
+    /**
+     * This function checks the individual neighbor combinations
+     * against our rule list to find out what the center cell will
+     * become.
+     * @param mid Our cell at the middle. This is the first cell
+     *            combination.
+     * @param NESW List cells: NORTH, EAST, SOUTH, WEST.
+     * @param ESWN List cells: EAST, SOUTH, WEST, NORTH.
+     * @param SWNE List cells: SOUTH, WEST, NORTH, EAST.
+     * @param WNES List cells: WEST, NORTH, EAST, SOUTH.
+     * @param finalRow Our new row.
+     */
     private void cellChecking (Cell mid,List<Cell> NESW,
             List<Cell> ESWN, List<Cell> SWNE, List<Cell> WNES,
                                List<Cell> finalRow) {
 
         for (int i = 0; i < rules.size(); i++) {
+            // First, we check all rule lists to see if they have
+            // the correct first cell (Check against our mid).
             if (rules.get(i).get(0) == mid) {
+                // If we found a correct list, we add it's four cells
+                // into a temporary list to compare.
                 List<Cell> tempRules = new ArrayList<>();
                 tempRules.add(rules.get(i).get(1));
                 tempRules.add(rules.get(i).get(2));
                 tempRules.add(rules.get(i).get(3));
                 tempRules.add(rules.get(i).get(4));
 
+                // Here, we check if the combinations matches,
+                // I used .equals because order MATTERS.
                 if (NESW.equals(tempRules)) {
+                    // If the temp combination matches with our row,
+                    // we get the rule combination's last cell and add
+                    // it to our finalRow.
                     finalRow.add(rules.get(i).get(5));
                     break;
                 }
@@ -74,10 +97,10 @@ public class Neighborhood {
     }
 
     /**
-     * This function does the looping through the rows. It's the
-     * algorithm to find the neighbors. Since we are given the
-     * top and bottom rows from evolve(), we don't have to
-     * do any weird top and bottom wraps.
+     * This function loops through the rows and check the neighbors.
+     * We only need North, East, South, and West in a clockwise direction.
+     * But since the neighbors are rotationally symmetrical, we need to
+     * check multiple combinations.
      * @param top The top row.
      * @param bottom The bottom row.
      * @param middle The middle row (current row).
@@ -86,99 +109,131 @@ public class Neighborhood {
     private void rowEvolve (List<Cell> top
             , List<Cell> bottom, List <Cell> middle
             , List<List<Cell>> newGen) {
-        // Temp list that we update.
-        //System.out.println();
-       // System.out.print("i = ");
+        // This is our new row that we update.
         List<Cell> finalRow = new ArrayList<>();
+
         for(int i = 0; i < middle.size(); i++) {
-           // System.out.print(i + ", ");
             // This is for normal checking.
             if ((i != 0) && (i != middle.size() - 1)) {
+                // NORTH, EAST, SOUTH, WEST combination.
                 List<Cell> NESW = new ArrayList<>();
                 NESW.add(top.get(i));
                 NESW.add(middle.get(i + 1));
                 NESW.add(bottom.get(i));
                 NESW.add(middle.get(i - 1));
 
+                // EAST, SOUTH, WEST, NORTH combination.
                 List<Cell> ESWN = new ArrayList<>();
                 ESWN.add(middle.get(i + 1));
                 ESWN.add(bottom.get(i));
                 ESWN.add(middle.get(i - 1));
                 ESWN.add(top.get(i));
 
+                // SOUTH, WEST, NORTH, EAST combination.
                 List<Cell> SWNE = new ArrayList<>();
                 SWNE.add(bottom.get(i));
                 SWNE.add(middle.get(i - 1));
                 SWNE.add(top.get(i));
                 SWNE.add(middle.get(i + 1));
 
+                // WEST, NORTH, EAST, SOUTH combination.
                 List<Cell> WNES = new ArrayList<>();
                 WNES.add(middle.get(i - 1));
                 WNES.add(top.get(i));
                 WNES.add(middle.get(i + 1));
                 WNES.add(bottom.get(i));
 
-                cellChecking(middle.get(i),NESW,ESWN,SWNE,WNES,finalRow);
+                // Now we use our list to compare with the rules.
+                cellChecking(middle.get(i),
+                        NESW,ESWN,SWNE,WNES,finalRow);
             }
-
-            // Checking the very left index of the row.
+            // Checking the very left index of the row. NO RIGHTS.
             else if (i == 0) {
+                // NORTH, EAST, SOUTH, WEST combination.
                 List<Cell> NESW = new ArrayList<>();
                 NESW.add(top.get(i));
                 NESW.add(middle.get(i + 1));
                 NESW.add(bottom.get(i));
+                // Since there is nothing to the left,
+                // we wrap around and use the last value.
                 NESW.add(middle.get(middle.size() - 1));
 
+                // EAST, SOUTH, WEST, NORTH combination.
                 List<Cell> ESWN = new ArrayList<>();
                 ESWN.add(middle.get(i + 1));
                 ESWN.add(bottom.get(i));
+                // Since there is nothing to the left,
+                // we wrap around and use the last value.
                 ESWN.add(middle.get(middle.size() - 1));
                 ESWN.add(top.get(i));
 
+                // SOUTH, WEST, NORTH, EAST combination.
                 List<Cell> SWNE = new ArrayList<>();
                 SWNE.add(bottom.get(i));
+                // Since there is nothing to the left,
+                // we wrap around and use the last value.
                 SWNE.add(middle.get(middle.size() - 1));
                 SWNE.add(top.get(i));
                 SWNE.add(middle.get(i + 1));
 
+                // WEST, NORTH, EAST, SOUTH combination.
                 List<Cell> WNES = new ArrayList<>();
+                // Since there is nothing to the left,
+                // we wrap around and use the last value.
                 WNES.add(middle.get(middle.size() - 1));
                 WNES.add(top.get(i));
                 WNES.add(middle.get(i + 1));
                 WNES.add(bottom.get(i));
 
-                cellChecking(middle.get(i),NESW,ESWN,SWNE,WNES,finalRow);
+                // Now we use our list to compare with the rules.
+                cellChecking(middle.get(i),
+                        NESW,ESWN,SWNE,WNES,finalRow);
             }
-            // Checking the very right index of the row.
+            // Checking the very right index of the row. NO LEFTS.
             else if (i == middle.size() - 1) {
+                // NORTH, EAST, SOUTH, WEST combination.
                 List<Cell> NESW = new ArrayList<>();
                 NESW.add(top.get(i));
+                // Since there is nothing to the right,
+                // we wrap around and use the first value.
                 NESW.add(middle.get(0));
                 NESW.add(bottom.get(i));
                 NESW.add(middle.get(i - 1));
 
+                // EAST, SOUTH, WEST, NORTH combination.
                 List<Cell> ESWN = new ArrayList<>();
+                // Since there is nothing to the right,
+                // we wrap around and use the first value.
                 ESWN.add(middle.get(0));
                 ESWN.add(bottom.get(i));
                 ESWN.add(middle.get(i - 1));
                 ESWN.add(top.get(i));
 
+                // SOUTH, WEST, NORTH, EAST combination.
                 List<Cell> SWNE = new ArrayList<>();
                 SWNE.add(bottom.get(i));
                 SWNE.add(middle.get(i - 1));
                 SWNE.add(top.get(i));
+                // Since there is nothing to the right,
+                // we wrap around and use the first value.
                 SWNE.add(middle.get(0));
 
+                // WEST, NORTH, EAST, SOUTH combination.
                 List<Cell> WNES = new ArrayList<>();
                 WNES.add(middle.get(i - 1));
                 WNES.add(top.get(i));
+                // Since there is nothing to the right,
+                // we wrap around and get the first value.
                 WNES.add(middle.get(0));
                 WNES.add(bottom.get(i));
 
-                cellChecking(middle.get(i),NESW,ESWN,SWNE,WNES,finalRow);
-
+                // Now we use our list to compare with the rules.
+                cellChecking(middle.get(i),
+                        NESW,ESWN,SWNE,WNES,finalRow);
             }
         }
+        // Once for loop is done, we will have a completed row.
+        // We then add it to our giant list of lists.
         newGen.add(finalRow);
     }
 
@@ -196,12 +251,15 @@ public class Neighborhood {
                         oldGens.get(r + 1), oldGens.get(r),
                         newGen);
             }
-
+            // Since we are at the top row and there's nothing above,
+            // we wrap around and use the last row as our top.
             else if(r == 0) {
                 rowEvolve(oldGens.get(oldGens.size() - 1),
                         oldGens.get(r + 1), oldGens.get(r),
                         newGen);
             }
+            // Since we are at the last row and there's nothing below,
+            // we wrap around and use the first row as our bottom.
             else if(r == oldGens.size() - 1) {
                 rowEvolve(oldGens.get(r - 1),
                         oldGens.get(0), oldGens.get(r),
@@ -209,20 +267,12 @@ public class Neighborhood {
             }
         }
         // Replace the older list with the new one.
-        //printList(oldGens);
         oldGens = newGen;
     }
 
-    private void printList(List<List<Cell>> list) {
-        System.out.println();
-        for (int z = 0; z < list.size(); z++) {
-            for (int i = 0; i < list.get(z).size(); i++) {
-                System.out.print(list.get(z).get(i).getInt());
-            }
-            System.out.println();
-        }
-    }
-
+    /**
+     * JavaFX show. Joe gave this to us.
+     */
     public void show() {
         gridPane.getChildren().clear();
         int rowIndex = 0;
@@ -243,6 +293,9 @@ public class Neighborhood {
         }
     }
 
+    /**
+     * This function calls everything together.
+     */
     public void nextGeneration() {
         show();
         evolve();

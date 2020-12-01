@@ -3,8 +3,9 @@ package elementaryCA.backend;
 import elementaryCA.backend.grid.Grid1D;
 import javafx.animation.AnimationTimer;
 
-import java.util.concurrent.TimeUnit;
-
+/**
+ * Class given by Joe.
+ */
 public class Runner {
 
     /**

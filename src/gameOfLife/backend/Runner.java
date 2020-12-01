@@ -1,11 +1,12 @@
 package gameOfLife.backend;
 
-//import gameOfLife.backend.grid.Grid1D;
 import gameOfLife.backend.neighborhood.Neighborhood;
 import javafx.animation.AnimationTimer;
 
 import java.util.concurrent.TimeUnit;
-
+/**
+ * Class given by Joe.
+ */
 public class Runner {
 
     /**

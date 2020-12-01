@@ -1,7 +1,9 @@
 package elementaryCA.backend.cell;
 
 import javafx.scene.paint.Color;
-
+/**
+ * Class given by Joe.
+ */
 public enum Cell {
     ZERO(false),
     ONE(true);
@@ -24,7 +26,6 @@ public enum Cell {
             return Color.BLACK;
         }
     }
-
 
     public static Cell fromChar(char c) throws IllegalArgumentException {
         if (c == '0') {

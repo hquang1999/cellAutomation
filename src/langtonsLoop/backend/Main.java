@@ -30,10 +30,9 @@ public class Main extends Application {
     private static int column;
 
     public static void main(String[] args) throws IOException {
+        // Inputting our first file. The init_config.txt.
         File input = new File(args[0]);
         Scanner scan = new Scanner(input);
-
-
 
         while (scan.hasNextLine()) {
             initConfig.add(scan.nextLine());
@@ -43,20 +42,17 @@ public class Main extends Application {
         row = initConfig.get(0).length();
         column = initConfig.size();
 
-
+        // Inputting in our rules file.
         File input2 = new File(args[1]);
         Scanner scan2 = new Scanner(input2);
 
         while (scan2.hasNextLine()) {
             rules.add(scan2.nextLine());
         }
-
         launch(args);
-
     }
 
     public void start(Stage primaryStage) throws Exception {
-
         primaryStage.setTitle("Langton's Loop");
 
         GridPane root = new GridPane();
@@ -67,11 +63,9 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-
-
-        List<List<Cell>> allGens = new ArrayList<>();
-
         char state;
+        // Converting strings to cells for our init.
+        List<List<Cell>> allGens = new ArrayList<>();
         for (int c = 0; c < column; c++) {
             List<Cell> allGensRows = new ArrayList<>();
             for (int r = 0; r < row; r++) {
@@ -81,6 +75,7 @@ public class Main extends Application {
             allGens.add(allGensRows);
         }
 
+        // Converting strings to cells for our rules.
         List<List<Cell>> listRules = new ArrayList<>();
         for (int i = 0; i < rules.size(); i++) {
             List<Cell> lRulesRows = new ArrayList<>();
@@ -91,15 +86,12 @@ public class Main extends Application {
             listRules.add(lRulesRows);
         }
 
-        List<Cell> zeroes = new ArrayList<>();
-        for (int i = 0; i < allGens.get(0).size(); i++) {
-            zeroes.add(Cell.ZERO);
-        }
-
+        // Input all the stuff needed to our neighborhood class.
         Neighborhood grid = new
                 Neighborhood(root, allGens
-                , listRules, zeroes,10, column);
+                , listRules,10);
 
+        // Run
         Runner.run(grid);
     }
 }

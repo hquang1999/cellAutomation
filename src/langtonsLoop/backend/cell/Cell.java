@@ -1,7 +1,10 @@
 package langtonsLoop.backend.cell;
 
 import javafx.scene.paint.Color;
-
+/**
+ * Class given by Joe. I modified it to take in ints instead
+ * because there are multiple numbers.
+ */
 public enum Cell {
     ZERO(0),
     ONE(1),

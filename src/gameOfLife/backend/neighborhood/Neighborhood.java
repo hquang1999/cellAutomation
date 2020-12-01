@@ -9,7 +9,12 @@ import java.util.List;
 
 import static gameOfLife.backend.cell.Cell.ONE;
 import static gameOfLife.backend.cell.Cell.ZERO;
-
+/**
+ * Author: Hieu Quang
+ * Version: 1.0
+ * Date: 20/11/20
+ * This class does all the cell looping and manipulation.
+ */
 public class Neighborhood {
 
     private final GridPane gridPane;
@@ -77,7 +82,7 @@ public class Neighborhood {
      */
     private void rowEvolve (List<Cell> top
             , List<Cell> bottom, List <Cell> middle
-            , List<List<Cell>> newGen, int columnIndex) {
+            , List<List<Cell>> newGen) {
         // Our total neighbors.
         int neighbors;
         // Temp list that we update.
@@ -209,7 +214,7 @@ public class Neighborhood {
             if ((r != 0) && (r != oldGens.size() - 1)) {
                 rowEvolve(oldGens.get(r - 1),
                         oldGens.get(r + 1), oldGens.get(r),
-                        newGen, r);
+                        newGen);
             }
             /*
                 If row is at the top, we have to use the very bottom
@@ -219,7 +224,7 @@ public class Neighborhood {
             else if(r == 0) {
                 rowEvolve(oldGens.get(oldGens.size() - 1),
                         oldGens.get(r + 1), oldGens.get(r),
-                        newGen, r);
+                        newGen);
             }
             /*
                 If row is at the bottom, we have to use the very
@@ -229,14 +234,16 @@ public class Neighborhood {
             else if(r == oldGens.size() - 1) {
                 rowEvolve(oldGens.get(r - 1),
                         oldGens.get(0), oldGens.get(r),
-                        newGen , r);
+                        newGen);
             }
         }
-
         // Replace the older list with the new one.
         oldGens = newGen;
     }
 
+    /**
+     * JavaFX show. Joe gave this to us.
+     */
     private void show() {
         gridPane.getChildren().clear();
         int colIndex = 0;
@@ -258,6 +265,9 @@ public class Neighborhood {
         }
     }
 
+    /**
+     * This function calls everything together.
+     */
     public void nextGeneration() {
         show();
         evolve();
