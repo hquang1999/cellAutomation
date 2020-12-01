@@ -60,6 +60,8 @@ public class Neighborhood {
                                List<Cell> finalRow) {
 
         for (int i = 0; i < rules.size(); i++) {
+            // Temporary variable that we can use if we found a matching rule.
+            List<Cell> foundRule = rules.get(i);
             // First, we check all rule lists to see if they have
             // the correct first cell (Check against our mid).
             if (rules.get(i).get(0) == mid) {
@@ -71,25 +73,28 @@ public class Neighborhood {
                 tempRules.add(rules.get(i).get(3));
                 tempRules.add(rules.get(i).get(4));
 
+                // Temporary length variable.
+                int fRLength = foundRule.size() - 1;
+
                 // Here, we check if the combinations matches,
                 // I used .equals because order MATTERS.
                 if (NESW.equals(tempRules)) {
                     // If the temp combination matches with our row,
                     // we get the rule combination's last cell and add
                     // it to our finalRow.
-                    finalRow.add(rules.get(i).get(5));
+                    finalRow.add(foundRule.get(fRLength));
                     break;
                 }
                 else if (ESWN.equals(tempRules)) {
-                    finalRow.add(rules.get(i).get(5));
+                    finalRow.add(foundRule.get(fRLength));
                     break;
                 }
                 else if (SWNE.equals(tempRules)) {
-                    finalRow.add(rules.get(i).get(5));
+                    finalRow.add(foundRule.get(fRLength));
                     break;
                 }
                 else if (WNES.equals(tempRules)) {
-                    finalRow.add(rules.get(i).get(5));
+                    finalRow.add(foundRule.get(fRLength));
                     break;
                 }
             }

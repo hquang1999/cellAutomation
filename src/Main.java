@@ -5,7 +5,7 @@ import java.io.InputStreamReader;
  * Author: Hieu Quang
  * Version: 1.0
  * Date: 1/12/20
- * This class calls all the mains from the file. Was given by joe.
+ * This class calls all the mains from the file and was given by joe.
  */
 public class Main {
     public static void main(String[] args) {

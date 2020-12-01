@@ -7,7 +7,8 @@
 I've add comments on all the code to give you a basic idea on how each function works. So this
 MD file is just for giving a bare bones summary of how each code works and some extras.
 
-The program uses args. You must follow these instructions to run the files.
+The program uses args. You must run the outer most main. That main calls all the other mains from the other classes. 
+You must follow these instructions to run the files.
 
 ######[First]
 Just quickly run the main. Then end it. 
@@ -52,5 +53,3 @@ ex:
     0 
 List: 31206.   
 ##### [GLITCHES]
-I encountered one weird glitch in black jack. It's the png. It's where the program does not add tens to the sum. I'm
-pretty sure I patched it though but i thought I mention it just in case. 
