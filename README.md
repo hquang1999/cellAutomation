@@ -54,4 +54,7 @@ ex:
 List: 31206.   
 ##### [GLITCHES]
 Langton's Loop will break IF you let it wrap around. The program will not recognize the rule. See the image in
-the file.
+the file. Joe says that it was fine though.
+
+The JAVAFX can also break if you're NOT in the right version of Java. It default to java 15 instead of 11.
+To fix: File -> Project Structure -> Project -> Project SDK -> Select 11 if it's not. 
