@@ -204,4 +204,3 @@ public class Main extends Application {
         Runner.run(grid);
     }
 }
-// elementaryCA.backend.Main.main(args);
